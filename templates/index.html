@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offensive Word Flag | Content Moderation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 4px solid #e74c3c;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #ecf0f1;
+            font-weight: normal;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .demo-section {
+            background: #ecf0f1;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #bdc3c7;
+        }
+
+        .demo-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: normal;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            color: #333;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .btn-group {
+            margin-top: 15px;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            border: 2px solid;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.offensive {
+            background: #fadbd8;
+            border-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        .result.clean {
+            background: #d5f4e6;
+            border-color: #27ae60;
+            color: #229954;
+        }
+
+        .stats-section {
+            background: #34495e;
+            color: #fff;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            padding: 15px;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            color: #ecf0f1;
+            margin-top: 5px;
+        }
+
+        .features-section {
+            margin: 30px 0;
+        }
+
+        .features-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: normal;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-box {
+            background: #ecf0f1;
+            padding: 25px;
+            border-left: 4px solid #e74c3c;
+            transition: background 0.3s;
+        }
+
+        .feature-box:hover {
+            background: #d5dbdb;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .feature-description {
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .kaggle-section {
+            text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: #2c3e50;
+        }
+
+        .kaggle-link {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: background 0.3s;
+        }
+
+        .kaggle-link:hover {
+            background: #c0392b;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .subtitle {
+                font-size: 1em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .demo-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Offensive Word Flag</h1>
+        <p class="subtitle">AI-Powered Content Moderation System</p>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <div class="demo-section">
+                <h2>Try It Live</h2>
+                <form action="{{ url_for('predict') }}" method="post" id="analyzeForm">
+                    <div class="input-group">
+                        <label for="textInput">Enter text to analyze:</label>
+                        <textarea id="textInput" name="text_input" placeholder="Type or paste any text here to check for offensive content..."></textarea>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Analyze Text</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAll()">Clear</button>
+                    </div>
+                </form>
+                
+                {% if show_result %}
+                <div id="result" class="result {{ result_class }} show">
+                    {{ prediction_text }}
+                </div>
+                {% else %}
+                <div id="result" class="result"></div>
+                {% endif %}
+            </div>
+
+            <div class="stats-section">
+                <h2 style="color: #ecf0f1; border: none;">Analysis Statistics</h2>
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalChecks">0</div>
+                        <div class="stat-label">Total Checks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="cleanCount">0</div>
+                        <div class="stat-label">Clean Content</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="flaggedCount">0</div>
+                        <div class="stat-label">Flagged Content</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <h2>Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-box">
+                        <div class="feature-title">Machine Learning Powered</div>
+                        <div class="feature-description">Advanced algorithms for accurate content detection and classification</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">Real-Time Analysis</div>
+                        <div class="feature-description">Instant processing and feedback for seamless user experience</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">High Accuracy</div>
+                        <div class="feature-description">Trained on comprehensive datasets for reliable results</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-title">Privacy Focused</div>
+                        <div class="feature-description">Local processing ensures your data remains secure</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kaggle-section">
+                <a href="https://www.kaggle.com/code/devanshshukla123/offensive-word-flag" target="_blank" class="kaggle-link">
+                    View Project on Kaggle
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Offensive Word Flag Project | Natural Language processing</p>
+    </footer>
+
+    <script>
+        let stats = {
+            total: parseInt(localStorage.getItem('totalChecks') || '0'),
+            clean: parseInt(localStorage.getItem('cleanCount') || '0'),
+            flagged: parseInt(localStorage.getItem('flaggedCount') || '0')
+        };
+        updateStats();
+        document.getElementById('analyzeForm').addEventListener('submit', function() {
+            stats.total++;
+            localStorage.setItem('totalChecks', stats.total);
+        });
+        {% if show_result %}
+        {% if result_class == 'offensive' %}
+        stats.flagged++;
+        localStorage.setItem('flaggedCount', stats.flagged);
+        {% else %}
+        stats.clean++;
+        localStorage.setItem('cleanCount', stats.clean);
+        {% endif %}
+        updateStats();
+        {% endif %}
+
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.remove('show');
+        }
+
+        function updateStats() {
+            document.getElementById('totalChecks').textContent = stats.total;
+            document.getElementById('cleanCount').textContent = stats.clean;
+            document.getElementById('flaggedCount').textContent = stats.flagged;
+        }
+        document.getElementById('textInput').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('analyzeForm').submit();
+            }
+        });
+    </script>
+</body>
+</html>
